@@ -7,6 +7,15 @@ declare class Injector {
 declare class JQueryExtened {
 }
 
+declare class Cache {
+    put<T>(key: string, value: T): T
+    get<T>(key: string): T
+    remove(key: string): void
+    removeAll(): void
+    destroy(): void
+    info(): { id: string, size: number, [key: string]: any }
+}
+
 declare namespace angular {
     function bind<T extends Function>(self: any, fn: T, ...args: any[]): T
     function bootstrap(element: Node, modules?: string[], config?: { strictDi: boolean }): Injector
