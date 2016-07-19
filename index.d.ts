@@ -16,6 +16,16 @@ declare class Cache {
     info(): { id: string, size: number, [key: string]: any }
 }
 
+declare class Attributes {
+    $attr: { [key: string]: string }
+    $normalize(name: string): string
+    $addClass(classVal: string): void
+    $removeClass(classVal: string): void
+    $updateClass(newClasses: string, oldClasses: string): void
+    $observe(key: string, fn: (interpolatedValue: string) => void): () => void
+    $set(name: string, value: string)
+}
+
 declare namespace angular {
     function bind<T extends Function>(self: any, fn: T, ...args: any[]): T
     function bootstrap(element: Node, modules?: string[], config?: { strictDi: boolean }): Injector
