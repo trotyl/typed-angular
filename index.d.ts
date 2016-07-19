@@ -33,6 +33,14 @@ declare namespace angular {
     function noop(): void
     function reloadWithDebugInfo(): void
     function toJson(obj: any, pretty: boolean|number): string
+
+    const version: {
+        full: string,
+        major: number,
+        minor: number,
+        dot: number,
+        codeName: string
+    }
 }
 
 export = angular;
