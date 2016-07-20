@@ -42,3 +42,8 @@ typings
 
 # output folder
 out
+
+
+### User Part
+
+.vscode/
