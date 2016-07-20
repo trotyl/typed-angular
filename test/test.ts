@@ -1,6 +1,7 @@
 import test = require('blue-tape')
 
-import angular = require('..')
+import angular = require('../src')
+import { Scope } from '../src/scope'
 
 angular.bind({}, () => {})
 angular.bind({}, () => {}, 1)
@@ -15,3 +16,10 @@ angular.copy({}, copy)
 angular.element('body')
 
 angular.equals(1, 2)
+
+let scope: Scope
+
+class MyVal {
+}
+
+scope.$watch(() => new MyVal(), (newVal) => {})
