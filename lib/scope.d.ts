@@ -19,13 +19,13 @@ export interface Scope {
     $watchGroup(watchExpression: string[], listener: WatchListener<any[]>): UnWatchFn
     $watchGroup<T>(watchExpression: ScopeExpressionFn<T>[], listener: WatchListener<T[]>): UnWatchFn
     $watchCollection(obj: string, listener: WatchListener<any>): UnWatchFn
-    $watchCollection<T extends MapObject>(obj: ScopeExpressionFn<T>, listener: WatchListener<T>): UnWatchFn
+    $watchCollection<T extends MapObject<any>>(obj: ScopeExpressionFn<T>, listener: WatchListener<T>): UnWatchFn
     $digest(): void
     $destroy(): void
-    $eval(expression?: string, locals?: MapObject): any
-    $eval<T>(expression?: ScopeExpressionFn<T>, locals?: MapObject): T
-    $evalAsync(expression?: string, locals?: MapObject): any
-    $evalAsync<T>(expression?: ScopeExpressionFn<T>, locals?: MapObject): T
+    $eval(expression?: string, locals?: MapObject<any>): any
+    $eval<T>(expression?: ScopeExpressionFn<T>, locals?: MapObject<any>): T
+    $evalAsync(expression?: string, locals?: MapObject<any>): any
+    $evalAsync<T>(expression?: ScopeExpressionFn<T>, locals?: MapObject<any>): T
     $apply(exp?: ScopeExpression): void
     $applyAsync(exp?: ScopeExpression): void
     $on(name: string, listener: EventListener): OffFn
