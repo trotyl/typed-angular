@@ -26,6 +26,37 @@ declare class Attributes {
     $set(name: string, value: string)
 }
 
+declare class AngularEvent extends Event {
+    targetScope: Scope
+    currentScope: Scope
+    name: string
+    stopPropagation(): void
+    preventDefault(): void
+    defaultPrevented: boolean
+}
+
+declare class Scope {
+    $id: string
+    $parent: Scope
+    $root: Scope
+
+    $new(isolate: boolean, parent: Scope): Scope
+    $watch(watchExpression: string|((scope: Scope) => any), listener: (newVal, oldVal, scope) => void, objectEquality: boolean): () => void
+    $watchGroup(watchExpression: (string|((scope: Scope) => any))[], listener: (newVal, oldVal, scope) => void): () => void
+    $watchCollection(obj: string|((scope: Scope) => any), listener: (newVal, oldVal, scope) => void): () => void
+    $digest(): void
+    $destroy(): void
+    $eval(expression?: string, locals?: { [key: string]: any }): any
+    $eval<T>(expression?: (scope: Scope) => T, locals?: { [key: string]: any }): T
+    $evalAsync(expression?: string, locals?: { [key: string]: any }): any
+    $evalAsync<T>(expression?: (scope: Scope) => T, locals?: { [key: string]: any }): T
+    $apply(exp?: string|((scope: Scope) => any)): void
+    $applyAsync(exp?: string|((scope: Scope) => any)): void
+    $on(name: string, listener: (event: AngularEvent, ...args: any[]) => void): () => void
+    $emit(name: string, ...args: any[]): AngularEvent
+    $broadcast(name: string, ...args: any[]): AngularEvent
+}
+
 declare namespace angular {
     function bind<T extends Function>(self: any, fn: T, ...args: any[]): T
     function bootstrap(element: Node, modules?: string[], config?: { strictDi: boolean }): Injector
