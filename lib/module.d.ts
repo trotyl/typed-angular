@@ -1,12 +1,12 @@
-import { Constructor, InjectableFn } from './lang'
+import { Constructor, InjectableFn, MapObject } from './lang'
 
-import { GetFn, DecoratorFn, Provider } from './provide'
+import { GetFn, DecoratorFn, Provider, Service } from './provide'
 
-import { RegisterFn as AnimateRegisterFn } from './animate-provider'
-import { RegisterFn as ControllerRegisterFn } from './controller-provider'
-import { RegisterFn as FilterRegisterFn } from './filter-provider'
+import { Animation, FactoryFn as AnimationFactoryFn } from './animate-provider'
+import { Controller } from './controller-provider'
+import { FactoryFn as FilterFactoryFn, Filter } from './filter-provider'
 
-import { DirectiveFn, ComponentFn } from './compile-provider'
+import { CompileProvider, DirectiveFactoryFn, DirectiveOptions, ComponentOptions } from './compile-provider'
 
 
 
@@ -14,19 +14,21 @@ type ConfigFn = InjectableFn<void>
 type InitializationFn = InjectableFn<void>
 
 export interface Module {
-    provider<T, U extends Provider<T>>(name: string, providerType: U|Constructor<U>): Module
-    factory<T>(name: string, $providerFunction: GetFn<T>): Module
-    service<T>(name: string, constructor: Constructor<T>): Module
-    value<T>(name: string, object: T): Module
-    constant<T>(name: string, object: T): Module
-    decorator<T>(name: string, decorFn: DecoratorFn<T>): Module
+    provider<T extends Service, U extends Provider<T>>(name: string, providerType: U|Constructor<U>): Module
+    factory<T extends Service>(name: string, $providerFunction: GetFn<T>): Module
+    service<T extends Service>(name: string, constructor: Constructor<T>): Module
+    value<T extends Service>(name: string, object: T): Module
+    constant<T extends Service>(name: string, object: T): Module
+    decorator<T extends Service>(name: string, decorFn: DecoratorFn<T>): Module
 
-    animation: AnimateRegisterFn
-    controller: ControllerRegisterFn
-    filter: FilterRegisterFn
+    animation<T extends Animation>(name: string, animationFactory: AnimationFactoryFn<T>): Module
+    controller<T extends Controller>(name: string, constructor: Constructor<T>): Module
+    filter<T extends Filter>(name: string, filterFactory: FilterFactoryFn<T>): Module
+    filter(mapObject: MapObject<Filter>): Module
     
-    directive: DirectiveFn
-    component: ComponentFn
+    directive<T extends Controller>(name: string, directiveFactory: DirectiveFactoryFn<T>): CompileProvider
+    directive(mapObject: MapObject<DirectiveOptions<Controller>>): CompileProvider
+    component<T extends Controller>(name: string, options: ComponentOptions<T>): CompileProvider
 
     config(configFn: ConfigFn): Module
     run(initializationFn: InitializationFn): Module

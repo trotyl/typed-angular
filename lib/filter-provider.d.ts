@@ -1,3 +1,12 @@
-import { NoParameterFn } from './lang'
+import { InjectableFn, MapObject } from './lang'
 
-export type RegisterFn = NoParameterFn
+export type FactoryFn<T> = InjectableFn<T>
+
+export interface Filter {
+
+}
+
+export interface FilterProvider {
+    register<T extends Filter>(name: string, factory: FactoryFn<T>): T
+    register(mapObject: MapObject<Filter>): MapObject<Filter>
+}

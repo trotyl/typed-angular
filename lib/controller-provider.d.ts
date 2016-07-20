@@ -1,3 +1,9 @@
-import { NoParameterFn } from './lang'
+import { Constructor } from './lang'
 
-export type RegisterFn = NoParameterFn
+export interface Controller {
+
+}
+
+export interface ControllerProvider {
+    register<T extends Controller>(name: string, constructor: Constructor<T>): void
+}

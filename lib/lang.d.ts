@@ -1,6 +1,6 @@
 export type NoParameterFn = () => void
 
-export type MapObject = { [key: string]: any }
+export type MapObject<T> = { [key: string]: T }
 export type StringMapObject = { [key: string]: string }
 
 export interface InjectableFn<T> {
