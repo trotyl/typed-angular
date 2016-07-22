@@ -25,3 +25,5 @@ class MyVal {
 let t = angular.toJson(undefined, false)
 let x = angular.fromJson(123)
 
+let y = angular.forEach({ a: 1, b: '2'}, (value, key, obj) => {})
+let z = angular.forEach([1, 2], (value, key, obj) => {})

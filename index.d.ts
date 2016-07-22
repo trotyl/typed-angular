@@ -47,9 +47,13 @@ declare namespace angular {
     function copy<T>(source: T, destination: T): void
     function element(element: SelectableElement): JQuery
     function equals<T>(o1: T, o2: T): boolean
-    function extend(dst: Object, ...src: Object[]): Object
-    function forEach(obj: Object, iterator: (value: any, key: string, obj: Object) => void, context?: any): Object
-    function forEach<T>(obj: T[], iterator: (value: T, key: number, obj: T[]) => void, context?: any): T[]
+    function extend<TDist, TSrc>(dst: TDist, src: TSrc): TDist & TSrc
+    function extend<TDist, TSrc0, TSrc1>(dst: TDist, src0: TSrc0, src1: TSrc1): TDist & TSrc0 & TSrc1
+    function extend<TDist, TSrc0, TSrc1, TSrc2>(dst: TDist, src0: TSrc0, src1: TSrc1, src2: TSrc2): TDist & TSrc0 & TSrc1 & TSrc2
+    function extend<TDist, TSrc0, TSrc1, TSrc2, TSrc3>(dst: TDist, src0: TSrc0, src1: TSrc1, src2: TSrc2, src3: TSrc3): TDist & TSrc0 & TSrc1 & TSrc2 & TSrc3
+    function extend(dst: any, ...src: any[]): any
+    function forEach<T>(obj: MapObject<T>, iterator: (value?: T, key?: string, obj?: MapObject<T>) => void, context?: any): MapObject<T>
+    function forEach<T>(obj: T[], iterator: (value?: T, key?: number, obj?: T[]) => void, context?: any): T[]
     function fromJson(json: string): Object | any[] | string | number
     function fromJson<T>(json: T): T
     function identity<T>(value: T): T
@@ -63,6 +67,10 @@ declare namespace angular {
     function isObject(value: any): boolean
     function isString(value: any): boolean
     function isUndefined(value: any): boolean
+    function merge<TDist, TSrc>(dst: TDist, src: TSrc): TDist & TSrc
+    function merge<TDist, TSrc0, TSrc1>(dst: TDist, src0: TSrc0, src1: TSrc1): TDist & TSrc0 & TSrc1
+    function merge<TDist, TSrc0, TSrc1, TSrc2>(dst: TDist, src0: TSrc0, src1: TSrc1, src2: TSrc2): TDist & TSrc0 & TSrc1 & TSrc2
+    function merge<TDist, TSrc0, TSrc1, TSrc2, TSrc3>(dst: TDist, src0: TSrc0, src1: TSrc1, src2: TSrc2, src3: TSrc3): TDist & TSrc0 & TSrc1 & TSrc2 & TSrc3
     function merge(dst: Object, ...src: Object[]): Object
     function module(name: string, requires?: string[], configFn?: Function): Module
     function noop(): void
