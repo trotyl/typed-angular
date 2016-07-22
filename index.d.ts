@@ -40,6 +40,7 @@ declare namespace angular {
     type ScopeExpression = ScopeExpressionFn<any> | string
     type ScopeExpressionFn<T> = (scope?: Scope) => T
     type SelectableElement = string | Element | Document | JQuery
+    type Type = InjectableFn<void> | InjectableFnArray<void>
     type UnObserveFn = NoParameterFn
     type UnWatchFn = NoParameterFn
     type ValidatorFn = (modelValue: any, viewValue: any) => boolean
@@ -215,12 +216,17 @@ declare namespace angular {
         $setSubmitted(): void
     }
 
-    interface InjectableFn<T> {
+    interface InjectableFn<T> extends Function {
         (...args: any[]): T
     }
 
     interface Injector {
-
+        get<T extends Service>(name: string, caller?: string): T
+        //TODO: Change locals to a Locals interface
+        invoke<T>(fn: InjectableFn<T> | InjectableFnArray<T>, self?: any, locals?: MapObject<Service>): T
+        has(name: string): boolean
+        instantiate<T>(type: Constructor<T>, locals?: MapObject<Service>): T
+        annotate(fn: InjectableFn<any> | InjectableFnArray<any>, strictDi?: boolean): string[]
     }
 
     interface JQuery {
