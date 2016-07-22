@@ -8,13 +8,15 @@ interface Function {
 }
 
 declare module 'angular' {
-    export = angular;
+    export = angular
 }
 
 declare namespace angular {
 
     type AnimationFactoryFn<T> = InjectableFn<T>
     type AsyncValidatorFn = (modelValue: any, viewValue: any) => Promise<void>
+    //TODO check type of callback
+    type Callback = any
     type ConfigFn = InjectableFn<void>
     type Control = FormController | NgModelController
     type DecoratorFn<T> = InjectableFn<T>
@@ -26,7 +28,11 @@ declare namespace angular {
     type FunctionParameter = any
     type GetFn<T> = InjectableFn<T>
     type InitializationFn = InjectableFn<void>
+    type InjectableFnArray<T> = (string | InjectableFn<T>)[]
     type MapObject<T> = { [key: string]: T }
+    type ModuleToLoad = string | ModuleToLoadFn | ModuleToLoadFnArray
+    type ModuleToLoadFn = InjectableFn<void>
+    type ModuleToLoadFnArray = InjectableFnArray<void>
     type NoParameterFn = () => void
     type OffFn = NoParameterFn
     type ParserFn = SingleTranformFn
@@ -41,8 +47,20 @@ declare namespace angular {
     type ViewChangeListener = NoParameterFn
     type WatchListener<T> = (newVal?: T, oldVal?: T, scope?: Scope) => void
 
+    const callbacks: { 
+        counter: number, 
+        [key: number]: Callback 
+    }
+    const version: {
+        full: string,
+        major: number,
+        minor: number,
+        dot: number,
+        codeName: string
+    }
+
     function bind<T extends Function>(self: any, fn: T, ...args: FunctionParameter[]): T
-    function bootstrap(element: SelectableElement, modules?: string[], config?: { strictDi: boolean }): Injector
+    function bootstrap(element: SelectableElement, modules?: ModuleToLoad[], config?: { strictDi?: boolean }): Injector
     function copy<T>(source: T): T
     function copy<T>(source: T, destination: T): void
     function element(element: SelectableElement): JQuery
@@ -56,6 +74,8 @@ declare namespace angular {
     function forEach<T>(obj: T[], iterator: (value?: T, key?: number, obj?: T[]) => void, context?: any): T[]
     function fromJson(json: string): Object | any[] | string | number
     function fromJson<T>(json: T): T
+    //TODO: check $testability service type
+    function getTestability(rootElement: SelectableElement): any 
     function identity<T>(value: T): T
     function injector(modules: (string | Function)[], strictDi?: boolean): Injector
     function isArray(value: any): boolean
@@ -67,6 +87,8 @@ declare namespace angular {
     function isObject(value: any): boolean
     function isString(value: any): boolean
     function isUndefined(value: any): boolean
+    function lowercase(str: string): string
+    function lowercase<T>(value: T): T
     function merge<TDist, TSrc>(dst: TDist, src: TSrc): TDist & TSrc
     function merge<TDist, TSrc0, TSrc1>(dst: TDist, src0: TSrc0, src1: TSrc1): TDist & TSrc0 & TSrc1
     function merge<TDist, TSrc0, TSrc1, TSrc2>(dst: TDist, src0: TSrc0, src1: TSrc1, src2: TSrc2): TDist & TSrc0 & TSrc1 & TSrc2
@@ -75,16 +97,10 @@ declare namespace angular {
     function module(name: string, requires?: string[], configFn?: Function): Module
     function noop(): void
     function reloadWithDebugInfo(): void
-    function toJson(obj: undefined, pretty: boolean | number): undefined
-    function toJson(obj: any, pretty: boolean | number): string
-
-    const version: {
-        full: string,
-        major: number,
-        minor: number,
-        dot: number,
-        codeName: string
-    }
+    function toJson(obj: undefined, pretty?: boolean | number): undefined
+    function toJson(obj: any, pretty?: boolean | number): string
+    function uppercase(str: string): string
+    function uppercase<T>(value: T): T
 
     interface AnchorScrollProvider {
         disableAutoScrolling(): void
@@ -203,7 +219,7 @@ declare namespace angular {
         controller<T extends Controller>(name?: string): T
         injector(): Injector
         inheritedData<T>(name: string): T
-        inheritedData(map: MapObject): JQuery
+        inheritedData(map: MapObject<any>): JQuery
         inheritedData(name: string, value: any): JQuery
     }
 
