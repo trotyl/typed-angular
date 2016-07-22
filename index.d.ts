@@ -3,21 +3,55 @@
 // Definitions by: Trotyl Yu <http://github.com/trotyl>
 // Definitions: https://github.com/trotyl/typed-angular
 
+interface Function {
+    $inject?: string[]
+}
+
 declare module 'angular' {
     export = angular;
 }
 
 declare namespace angular {
 
-    function bind<T extends Function>(self: any, fn: T, ...args: any[]): T
-    function bootstrap(element: Node, modules?: string[], config?: { strictDi: boolean }): Injector
-    function copy<T>(source: T, destination?: T): T
-    function element(element: string | Node): JQueryExtended
+    type AnimationFactoryFn<T> = InjectableFn<T>
+    type AsyncValidatorFn = (modelValue: any, viewValue: any) => Promise<void>
+    type ConfigFn = InjectableFn<void>
+    type Control = FormController | NgModelController
+    type DecoratorFn<T> = InjectableFn<T>
+    type DirectiveFactoryFn<T extends Controller> = InjectableFn<DirectiveOptions<T>>
+    type DoneFunction = NoParameterFn
+    type EventListener = (event?: AngularEvent, ...args: any[]) => void
+    type FilterFactoryFn<T> = InjectableFn<T>
+    type FormatterFn = SingleTranformFn
+    type FunctionParameter = any
+    type GetFn<T> = InjectableFn<T>
+    type InitializationFn = InjectableFn<void>
+    type MapObject<T> = { [key: string]: T }
+    type NoParameterFn = () => void
+    type OffFn = NoParameterFn
+    type ParserFn = SingleTranformFn
+    type SingleTranformFn = (value: any) => any
+    type StringMapObject = { [key: string]: string }
+    type ScopeExpression = ScopeExpressionFn<any> | string
+    type ScopeExpressionFn<T> = (scope?: Scope) => T
+    type SelectableElement = string | Element | Document | JQuery
+    type UnObserveFn = NoParameterFn
+    type UnWatchFn = NoParameterFn
+    type ValidatorFn = (modelValue: any, viewValue: any) => boolean
+    type ViewChangeListener = NoParameterFn
+    type WatchListener<T> = (newVal?: T, oldVal?: T, scope?: Scope) => void
+
+    function bind<T extends Function>(self: any, fn: T, ...args: FunctionParameter[]): T
+    function bootstrap(element: SelectableElement, modules?: string[], config?: { strictDi: boolean }): Injector
+    function copy<T>(source: T): T
+    function copy<T>(source: T, destination: T): void
+    function element(element: SelectableElement): JQuery
     function equals<T>(o1: T, o2: T): boolean
     function extend(dst: Object, ...src: Object[]): Object
     function forEach(obj: Object, iterator: (value: any, key: string, obj: Object) => void, context?: any): Object
     function forEach<T>(obj: T[], iterator: (value: T, key: number, obj: T[]) => void, context?: any): T[]
     function fromJson(json: string): Object | any[] | string | number
+    function fromJson<T>(json: T): T
     function identity<T>(value: T): T
     function injector(modules: (string | Function)[], strictDi?: boolean): Injector
     function isArray(value: any): boolean
@@ -33,6 +67,7 @@ declare namespace angular {
     function module(name: string, requires?: string[], configFn?: Function): Module
     function noop(): void
     function reloadWithDebugInfo(): void
+    function toJson(obj: undefined, pretty: boolean | number): undefined
     function toJson(obj: any, pretty: boolean | number): string
 
     const version: {
@@ -42,32 +77,6 @@ declare namespace angular {
         dot: number,
         codeName: string
     }
-
-    type AnimationFactoryFn<T> = InjectableFn<T>
-    type AsyncValidatorFn = (modelValue: any, viewValue: any) => Promise<void>
-    type ConfigFn = InjectableFn<void>
-    type Control = FormController | NgModelController
-    type DecoratorFn<T> = InjectableFn<T>
-    type DirectiveFactoryFn<T extends Controller> = InjectableFn<DirectiveOptions<T>>
-    type DoneFunction = NoParameterFn
-    type EventListener = (event?: AngularEvent, ...args: any[]) => void
-    type FilterFactoryFn<T> = InjectableFn<T>
-    type FormatterFn = SingleTranformFn
-    type GetFn<T> = InjectableFn<T>
-    type InitializationFn = InjectableFn<void>
-    type MapObject<T> = { [key: string]: T }
-    type NoParameterFn = () => void
-    type OffFn = NoParameterFn
-    type ParserFn = SingleTranformFn
-    type SingleTranformFn = (value: any) => any
-    type StringMapObject = { [key: string]: string }
-    type ScopeExpression = ScopeExpressionFn<any> | string
-    type ScopeExpressionFn<T> = (scope?: Scope) => T
-    type UnObserveFn = NoParameterFn
-    type UnWatchFn = NoParameterFn
-    type ValidatorFn = (modelValue: any, viewValue: any) => boolean
-    type ViewChangeListener = NoParameterFn
-    type WatchListener<T> = (newVal?: T, oldVal?: T, scope?: Scope) => void
 
     interface AnchorScrollProvider {
         disableAutoScrolling(): void
@@ -180,8 +189,14 @@ declare namespace angular {
 
     }
 
-    interface JQueryExtended {
-
+    interface JQuery {
+        scope<T extends Scope>(): T
+        isolateScope<T extends Scope>(): T
+        controller<T extends Controller>(name?: string): T
+        injector(): Injector
+        inheritedData<T>(name: string): T
+        inheritedData(map: MapObject): JQuery
+        inheritedData(name: string, value: any): JQuery
     }
 
     interface Module {

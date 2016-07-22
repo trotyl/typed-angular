@@ -24,11 +24,35 @@
     "ts-node": "^0.9.3",
     "tslint": "^3.13.0",
     "tslint-config-typings": "^0.2.3",
+    "typescript": "^2.1.0-dev.20160722",
     "typings": "^1.3.1"
   },
   "jspm": {
     "devDependencies": {
       "typescript": "npm:typescript@^1.6.2"
     }
-  }
+  },
+  "name": "typed-angular",
+  "description": "",
+  "version": "0.0.1",
+  "main": "index.d.ts",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trotyl/typed-angular.git"
+  },
+  "keywords": [
+    "typescript",
+    "typings",
+    "angular"
+  ],
+  "author": "Trotyl Yu <trotyl@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/trotyl/typed-angular/issues"
+  },
+  "homepage": "https://github.com/trotyl/typed-angular#readme"
 }

@@ -1,7 +1,8 @@
+/// <reference path="../index.d.ts" />
+
 import test = require('blue-tape')
 
-import angular = require('../src')
-import { Scope } from '../src/scope'
+import angular = require('angular')
 
 angular.bind({}, () => {})
 angular.bind({}, () => {}, 1)
@@ -17,9 +18,10 @@ angular.element('body')
 
 angular.equals(1, 2)
 
-let scope: Scope
 
 class MyVal {
 }
 
-scope.$watch(() => new MyVal(), (newVal) => {})
+let t = angular.toJson(undefined, false)
+let x = angular.fromJson(123)
+
