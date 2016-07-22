@@ -25,7 +25,6 @@ declare namespace angular {
     type EventListener = (event?: AngularEvent, ...args: any[]) => void
     type FilterFactoryFn<T> = InjectableFn<T>
     type FormatterFn = SingleTranformFn
-    type FunctionParameter = any
     type GetFn<T> = InjectableFn<T>
     type InitializationFn = InjectableFn<void>
     type InjectableFnArray<T> = (string | InjectableFn<T>)[]
@@ -59,7 +58,18 @@ declare namespace angular {
         codeName: string
     }
 
-    function bind<T extends Function>(self: any, fn: T, ...args: FunctionParameter[]): T
+    function bind<T extends Function>(self: any, fn: T): T
+    function bind<TResult, TParam>(self: any, fn: (param: TParam) => TResult, arg: TParam): () => TResult
+    function bind<TResult, TParam0, TParam1>(self: any, fn: (param0: TParam0, param1: TParam1) => TResult, arg0: TParam0): (param1: TParam1) => TResult
+    function bind<TResult, TParam0, TParam1>(self: any, fn: (param0: TParam0, param1: TParam1) => TResult, arg0: TParam0, arg1: TParam1): () => TResult
+    function bind<TResult, TParam0, TParam1, TParam2>(self: any, fn: (param0: TParam0, param1: TParam1, param2: TParam2) => TResult, arg0: TParam0): (param1: TParam1, param2: TParam2) => TResult
+    function bind<TResult, TParam0, TParam1, TParam2>(self: any, fn: (param0: TParam0, param1: TParam1, param2: TParam2) => TResult, arg0: TParam0, arg1: TParam1): (param2: TParam2) => TResult
+    function bind<TResult, TParam0, TParam1, TParam2>(self: any, fn: (param0: TParam0, param1: TParam1, param2: TParam2) => TResult, arg0: TParam0, arg1: TParam1, arg2: TParam2): () => TResult
+    function bind<TResult, TParam0, TParam1, TParam2, TParam3>(self: any, fn: (param0: TParam0, param1: TParam1, param2: TParam2, param3: TParam3) => TResult, arg0: TParam0): (param1: TParam1, param2: TParam2, param3: TParam3) => TResult
+    function bind<TResult, TParam0, TParam1, TParam2, TParam3>(self: any, fn: (param0: TParam0, param1: TParam1, param2: TParam2, param3: TParam3) => TResult, arg0: TParam0, arg1: TParam1): (param2: TParam2, param3: TParam3) => TResult
+    function bind<TResult, TParam0, TParam1, TParam2, TParam3>(self: any, fn: (param0: TParam0, param1: TParam1, param2: TParam2, param3: TParam3) => TResult, arg0: TParam0, arg1: TParam1, arg2: TParam2): (param3: TParam3) => TResult
+    function bind<TResult, TParam0, TParam1, TParam2, TParam3>(self: any, fn: (param0: TParam0, param1: TParam1, param2: TParam2, param3: TParam3) => TResult, arg0: TParam0, arg1: TParam1, arg2: TParam2, arg3: TParam3): () => TResult
+    function bind(self: any, fn: Function, ...args: any[]): Function
     function bootstrap(element: SelectableElement, modules?: ModuleToLoad[], config?: { strictDi?: boolean }): Injector
     function copy<T>(source: T): T
     function copy<T>(source: T, destination: T): void
