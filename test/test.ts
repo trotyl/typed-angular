@@ -2,8 +2,8 @@
 
 import test = require('blue-tape')
 
-import angular = require('angular')
-import * as angular_alias from 'angular'
+import angular_m = require('angular')
+import * as angular_ns from 'angular'
 
 import { Scope } from 'angular'
 
@@ -11,26 +11,29 @@ let scope: Scope
 
 scope.$watch(() => {}, () => {})
 
-angular.bind({}, () => {})
-angular.bind({}, () => {}, 1)
-angular.bind({}, () => {}, 1, 2)
+angular.copy({}, {})
+angular_ns.copy({}, {})
 
-angular.bootstrap(document, ['demo'])
-angular.bootstrap(document, ['demo'], { strictDi: true })
+angular_m.bind({}, () => {})
+angular_m.bind({}, () => {}, 1)
+angular_m.bind({}, () => {}, 1, 2)
 
-let copy = angular.copy({})
-angular.copy({}, copy)
+angular_m.bootstrap(document, ['demo'])
+angular_m.bootstrap(document, ['demo'], { strictDi: true })
 
-angular.element('body')
+let copy = angular_m.copy({})
+angular_m.copy({}, copy)
 
-angular.equals(1, 2)
+angular_m.element('body')
+
+angular_m.equals(1, 2)
 
 
 class MyVal {
 }
 
-let t = angular.toJson(undefined, false)
-let x = angular.fromJson(123)
+let t = angular_m.toJson(undefined, false)
+let x = angular_m.fromJson(123)
 
-let y = angular.forEach({ a: 1, b: '2'}, (value, key, obj) => {})
-let z = angular.forEach([1, 2], (value, key, obj) => {})
+let y = angular_m.forEach({ a: 1, b: '2'}, (value, key, obj) => {})
+let z = angular_m.forEach([1, 2], (value, key, obj) => {})

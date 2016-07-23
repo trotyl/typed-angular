@@ -109,6 +109,10 @@ declare namespace angular {
     function uppercase(str: string): string
     function uppercase<T>(value: T): T
 
+    interface AnchorScrollService extends Service {
+        //TODO
+    }
+
     interface AnchorScrollProvider {
         disableAutoScrolling(): void
     }
@@ -122,6 +126,19 @@ declare namespace angular {
         defaultPrevented: boolean
     }
 
+    interface AnimateService extends Service {
+        //TODO
+    }
+
+    interface AnimateCssService extends Service {
+        //TODO
+    }
+
+    interface AnimateProvider {
+        register<T extends Animation>(name: string, factory: AnimationFactoryFn<T>): void
+        classNameFilter(expression?: RegExp): RegExp
+    }
+
     interface Animation {
         // TODO: check element type
         setClass?(element, addedClasses, removedClasses, doneFunction: DoneFunction, options): void
@@ -131,11 +148,6 @@ declare namespace angular {
         leave?(element, doneFunction: DoneFunction, options): void
         move?(element, doneFunction: DoneFunction, options): void
         animate?(element, fromStyles, toStyles, doneFunction: DoneFunction, options): void
-    }
-
-    interface AnimateProvider {
-        register<T extends Animation>(name: string, factory: AnimationFactoryFn<T>): void
-        classNameFilter(expression?: RegExp): RegExp
     }
 
     interface Attributes {
@@ -157,12 +169,12 @@ declare namespace angular {
         info(): { id: string, size: number, [key: string]: any }
     }
 
-    interface Constructor<T> {
-        new (...args: any[]): T
+    interface CacheFactoryService extends Service {
+        //TODO
     }
 
-    interface DirectiveOptions<T extends Controller> {
-
+    interface CompileService extends Service {
+        //TODO
     }
 
     interface ComponentOptions<T extends Controller> {
@@ -175,16 +187,40 @@ declare namespace angular {
         component<T extends Controller>(name: string, options: ComponentOptions<T>): CompileProvider
     }
 
+    interface Constructor<T> {
+        new (...args: any[]): T
+    }
+
     interface Controller {
 
+    }
+
+    interface ControllerService extends Service {
+        //TODO
     }
 
     interface ControllerProvider {
         register<T extends Controller>(name: string, constructor: Constructor<T>): void
     }
 
+    interface DirectiveOptions<T extends Controller> {
+
+    }
+
+    interface DocumentService extends Service {
+        //TODO
+    }
+
+    interface ExceptionHandlerService extends Service {
+        //TODO
+    }
+
     interface Filter {
 
+    }
+
+    interface FilterService extends Service {
+        //TODO
     }
 
     interface FilterProvider {
@@ -216,17 +252,71 @@ declare namespace angular {
         $inject?: string[]
     }
 
+    interface HttpService extends Service {
+        //TODO
+    }
+
+    interface HttpBackendService extends Service {
+        //TODO
+    }
+
+    interface HttpParamSerializerService extends Service {
+        //TODO
+    }
+
+    interface HttpParamSerializerJQLikeService extends Service {
+        //TODO
+    }
+
     interface InjectableFn<T> extends Function {
         (...args: any[]): T
     }
 
     interface Injector {
+        get(name: '$anchorScroll', caller?: string): AnchorScrollService
+        get(name: '$animate', caller?: string): AnimateService
+        get(name: '$animateCss', caller?: string): AnimateCssService
+        get(name: '$cacheFactory', caller?: string): CacheFactoryService
+        get(name: '$compile', caller?: string): CompileService
+        get(name: '$controller', caller?: string): ControllerService
+        get(name: '$document', caller?: string): DocumentService
+        get(name: '$exceptionHandler', caller?: string): ExceptionHandlerService
+        get(name: '$filter', caller?: string): FilterService
+        get(name: '$http', caller?: string): HttpService
+        get(name: '$httpBackend', caller?: string): HttpBackendService
+        get(name: '$httpParamSerializer', caller?: string): HttpParamSerializerService
+        get(name: '$httpParamSerializerJQLike', caller?: string): HttpParamSerializerJQLikeService
+        get(name: '$interpolate', caller?: string): InterpolateService
+        get(name: '$interval', caller?: string): IntervalService
+        get(name: '$jsonpCallbacks', caller?: string): JsonpCallbacksService
+        get(name: '$locale', caller?: string): LocaleService
+        get(name: '$location', caller?: string): LocationService
+        get(name: '$log', caller?: string): LogService
+        get(name: '$parse', caller?: string): ParseService
+        get(name: '$q', caller?: string): QService
+        get(name: '$rootElement', caller?: string): RootElementService
+        get(name: '$rootScope', caller?: string): RootScopeService
+        get(name: '$sce', caller?: string): SceService
+        get(name: '$sceDelegate', caller?: string): SceDelegateService
+        get(name: '$templateCache', caller?: string): TemplateCacheService
+        get(name: '$templateRequest', caller?: string): TemplateRequestService
+        get(name: '$timeout', caller?: string): TimeoutService
+        get(name: '$window', caller?: string): WindowService
+        get(name: '$xhrFactory', caller?: string): XhrFactoryService
         get<T extends Service>(name: string, caller?: string): T
         //TODO: Change locals to a Locals interface
         invoke<T>(fn: InjectableFn<T> | InjectableFnArray<T>, self?: any, locals?: MapObject<Service>): T
         has(name: string): boolean
         instantiate<T>(type: Constructor<T>, locals?: MapObject<Service>): T
         annotate(fn: InjectableFn<any> | InjectableFnArray<any>, strictDi?: boolean): string[]
+    }
+
+    interface InterpolateService extends Service {
+        //TODO
+    }
+
+    interface IntervalService extends Service {
+        //TODO
     }
 
     interface JQuery {
@@ -237,6 +327,22 @@ declare namespace angular {
         inheritedData<T>(name: string): T
         inheritedData(map: MapObject<any>): JQuery
         inheritedData(name: string, value: any): JQuery
+    }
+
+    interface JsonpCallbacksService extends Service {
+        //TODO
+    }
+
+    interface LocaleService extends Service {
+        //TODO
+    }
+
+    interface LocationService extends Service {
+        //TODO
+    }
+
+    interface LogService extends Service {
+        //TODO
     }
 
     interface Module {
@@ -293,6 +399,10 @@ declare namespace angular {
         $setViewValue(value: any, trigger: string): void
     }
 
+    interface ParseService extends Service {
+        //TODO
+    }
+
     interface Provide {
         provider<T extends Service, U extends Provider<T>>(name: string, provider: U | Constructor<U>): U
         factory<T extends Service>(name: string, $getFn: GetFn<T>): Provider<T>
@@ -305,6 +415,26 @@ declare namespace angular {
     interface Provider<T> {
         $get: GetFn<T>
         [key: string]: any
+    }
+
+    interface QService extends Service {
+        //TODO
+    }
+
+    interface RootElementService extends Service {
+        //TODO
+    }
+
+    interface RootScopeService extends Service {
+        //TODO
+    }
+
+    interface SceService extends Service {
+        //TODO
+    }
+
+    interface SceDelegateService extends Service {
+        //TODO
     }
 
     interface Scope {
@@ -338,5 +468,25 @@ declare namespace angular {
 
     interface Service {
 
+    }
+
+    interface TemplateCacheService extends Service {
+        //TODO
+    }
+
+    interface TemplateRequestService extends Service {
+        //TODO
+    }
+
+    interface TimeoutService extends Service {
+        //TODO
+    }
+
+    interface WindowService extends Service {
+        //TOOD
+    }
+
+    interface XhrFactoryService extends Service {
+        //TODO
     }
 }
