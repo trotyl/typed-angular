@@ -304,10 +304,9 @@ declare namespace angular {
         get(name: '$window', caller?: string): WindowService
         get(name: '$xhrFactory', caller?: string): XhrFactoryService
         get<T extends Service>(name: string, caller?: string): T
-        //TODO: Change locals to a Locals interface
-        invoke<T>(fn: InjectableFn<T> | InjectableFnArray<T>, self?: any, locals?: MapObject<Service>): T
+        invoke<T>(fn: InjectableFn<T> | InjectableFnArray<T>, self?: any, locals?: Locals): T
         has(name: string): boolean
-        instantiate<T>(type: Constructor<T>, locals?: MapObject<Service>): T
+        instantiate<T>(type: Constructor<T>, locals?: Locals): T
         annotate(fn: InjectableFn<any> | InjectableFnArray<any>, strictDi?: boolean): string[]
     }
 
@@ -335,6 +334,40 @@ declare namespace angular {
 
     interface LocaleService extends Service {
         //TODO
+    }
+
+    interface Locals {
+        $anchorScroll: AnchorScrollService
+        $animate: AnimateService
+        $animateCss: AnimateCssService
+        $cacheFactory: CacheFactoryService
+        $compile: CompileService
+        $controller: ControllerService
+        $document: Document
+        $exceptionHandler: ExceptionHandlerService
+        $filter: FilterService
+        $http: HttpService
+        $httpBackend: HttpBackendService
+        $httpParamSerializer: HttpParamSerializerService
+        $httpParamSerializerJQLike: HttpParamSerializerJQLikeService
+        $interpolate: InterpolateService
+        $interval: IntervalService
+        $jsonpCallbacks: JsonpCallbacksService
+        $locale: LocaleService
+        $locationL: LocationService
+        $log: LogService
+        $parse: ParseService
+        $q: QService
+        $rootElement: RootElementService
+        $rootScope: RootScopeService
+        $sce: SceService
+        $sceDelegate: SceDelegateService
+        $templateCache: TemplateCacheService
+        $templateRequest: TemplateRequestService
+        $timeout: TimeoutService
+        $window: WindowService
+        $xhrFactory: XhrFactoryService
+        [name: string]: Service
     }
 
     interface LocationService extends Service {
