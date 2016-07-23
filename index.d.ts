@@ -110,7 +110,8 @@ declare namespace angular {
     function uppercase<T>(value: T): T
 
     interface AnchorScrollService extends Service {
-        //TODO
+        (hash?: string): void
+        yOffset: number | ((...args: any[]) => number) | JQuery
     }
 
     interface AnchorScrollProvider {
