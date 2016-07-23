@@ -1,8 +1,15 @@
-/// <reference path="../index.d.ts" />
+/// <reference path="../typings/index.d.ts" />
 
 import test = require('blue-tape')
 
 import angular = require('angular')
+import * as angular_alias from 'angular'
+
+import { Scope } from 'angular'
+
+let scope: Scope
+
+scope.$watch(() => {}, () => {})
 
 angular.bind({}, () => {})
 angular.bind({}, () => {}, 1)

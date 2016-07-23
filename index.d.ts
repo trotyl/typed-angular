@@ -3,10 +3,6 @@
 // Definitions by: Trotyl Yu <http://github.com/trotyl>
 // Definitions: https://github.com/trotyl/typed-angular
 
-interface Function {
-    $inject?: string[]
-}
-
 declare module 'angular' {
     export = angular
 }
@@ -47,9 +43,9 @@ declare namespace angular {
     type ViewChangeListener = NoParameterFn
     type WatchListener<T> = (newVal?: T, oldVal?: T, scope?: Scope) => void
 
-    const callbacks: { 
-        counter: number, 
-        [key: number]: Callback 
+    const callbacks: {
+        counter: number,
+        [key: number]: Callback
     }
     const version: {
         full: string,
@@ -86,7 +82,7 @@ declare namespace angular {
     function fromJson(json: string): Object | any[] | string | number
     function fromJson<T>(json: T): T
     //TODO: check $testability service type
-    function getTestability(rootElement: SelectableElement): any 
+    function getTestability(rootElement: SelectableElement): any
     function identity<T>(value: T): T
     function injector(modules: (string | Function)[], strictDi?: boolean): Injector
     function isArray(value: any): boolean
@@ -214,6 +210,10 @@ declare namespace angular {
         $setPristine(): void
         $setUntouched(): void
         $setSubmitted(): void
+    }
+
+    interface Function {
+        $inject?: string[]
     }
 
     interface InjectableFn<T> extends Function {
