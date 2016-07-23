@@ -128,7 +128,36 @@ declare namespace angular {
     }
 
     interface AnimateService extends Service {
-        //TODO
+        //TODO: check type of phase
+        on(event: string, container: Element, callback: (element: Element, phase: any) => void): void
+        off(container: Element, callback?: any): void
+        off(event: string, container?: Element, callback?: () => void): void
+        pin(element: string, parentElement: string): void
+        enabled(enabled?: boolean): boolean
+        enabled(element?: Element, enabled?: boolean): boolean
+        //TODO: check type of promise
+        cancel(animationPromise: Promise<any>): void
+        //TODO: check type of promise
+        //TODO: extract options type
+        enter<T extends MapObject<string>>(element: Element, parent: Element, after?: Element, options?: { addClass: string, from: T, removeClass: string, to: T }): Promise<any>
+        //TODO: check type of promise
+        //TODO: extract options type
+        move<T extends MapObject<string>>(element: Element, parent: Element, after?: Element, options?: { addClass: string, from: T, removeClass: string, to: T }): Promise<any>
+        //TODO: check type of promise
+        //TODO: extract options type
+        leave<T extends MapObject<string>>(element: Element, options?: { addClass: string, from: T, removeClass: string, to: T }): Promise<any>
+        //TODO: check type of promise
+        //TODO: extract options type
+        addClass<T extends MapObject<string>>(element: Element, className: string, options?: { addClass: string, from: T, removeClass: string, to: T }): Promise<any>
+        //TODO: check type of promise
+        //TODO: extract options type
+        removeClass<T extends MapObject<string>>(element: Element, className: string, options?: { addClass: string, from: T, removeClass: string, to: T }): Promise<any>
+        //TODO: check type of promise
+        //TODO: extract options type
+        setClass<T extends MapObject<string>>(element: Element, add: string, remove: string, options?: { addClass: string, from: T, removeClass: string, to: T }): Promise<any>
+        //TODO: check type of promise
+        //TODO: extract options type
+        animate<T extends MapObject<string>>(element: Element, from: T, to: T, className: string, options?: { addClass: string, from: T, removeClass: string, to: T }): Promise<any>
     }
 
     interface AnimateCssService extends Service {
