@@ -3,18 +3,21 @@
 // Definitions by: Trotyl Yu <http://github.com/trotyl>
 // Definitions: https://github.com/trotyl/typed-angular
 
+interface Function {
+    $inject?: string[]
+}
+
 declare module 'angular' {
     export = angular
 }
 
 declare namespace angular {
 
+    type AnimatableElement = JQuery | Element | Document
     type AnimateEvent = 'enter' | 'leave' | 'move' | 'addClass' | 'removeClass'
     type AnimateOptions<T> = { addClass: string, from: T, removeClass: string, to: T }
     type AnimationFactoryFn<T> = InjectableFn<T>
     type AsyncValidatorFn = (modelValue: any, viewValue: any) => Promise<void>
-    //TODO check type of callback
-    type Callback = any
     type ConfigFn = InjectableFn<void>
     type Control = FormController | NgModelController
     type DecoratorFn<T> = InjectableFn<T>
@@ -47,7 +50,7 @@ declare namespace angular {
 
     const callbacks: {
         counter: number,
-        [key: number]: Callback
+        [key: number]: Function
     }
     const version: {
         full: string,
@@ -83,10 +86,8 @@ declare namespace angular {
     function forEach<T>(obj: T[], iterator: (value?: T, key?: number, obj?: T[]) => void, context?: any): T[]
     function fromJson(json: string): Object | any[] | string | number
     function fromJson<T>(json: T): T
-    //TODO: check $testability service type
-    function getTestability(rootElement: SelectableElement): any
     function identity<T>(value: T): T
-    function injector(modules: (string | Function)[], strictDi?: boolean): Injector
+    function injector(modules?: (string | Function)[], strictDi?: boolean): Injector
     function isArray(value: any): boolean
     function isDate(value: any): boolean
     function isDefined(value: any): boolean
@@ -147,7 +148,7 @@ declare namespace angular {
     }
 
     interface AnimateCssService extends Service {
-        //TODO
+        (element, options): Animator
     }
 
     interface AnimateProvider {
@@ -164,6 +165,10 @@ declare namespace angular {
         leave?(element, doneFunction: DoneFunction, options): void
         move?(element, doneFunction: DoneFunction, options): void
         animate?(element, fromStyles, toStyles, doneFunction: DoneFunction, options): void
+    }
+
+    interface Animator {
+        // TODO
     }
 
     interface Attributes {
@@ -264,10 +269,6 @@ declare namespace angular {
         $setSubmitted(): void
     }
 
-    interface Function {
-        $inject?: string[]
-    }
-
     interface HttpService extends Service {
         //TODO
     }
@@ -289,6 +290,8 @@ declare namespace angular {
     }
 
     interface Injector {
+        get(name: '$injector', caller?: string): Injector
+
         get(name: '$anchorScroll', caller?: string): AnchorScrollService
         get(name: '$animate', caller?: string): AnimateService
         get(name: '$animateCss', caller?: string): AnimateCssService
