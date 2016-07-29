@@ -13,30 +13,23 @@ declare module 'angular' {
 
 declare namespace angular {
 
-    type AnimatableElement = JQuery | Element | Document
     type AnimateEvent = 'enter' | 'leave' | 'move' | 'addClass' | 'removeClass'
-    type AnimateOptions<T> = { addClass: string, from: T, removeClass: string, to: T }
     type AnimationFactoryFn<T> = InjectableFn<T>
-    type AsyncValidatorFn = (modelValue: any, viewValue: any) => Promise<void>
     type ConfigFn = InjectableFn<void>
     type Control = FormController | NgModelController
     type DecoratorFn<T> = InjectableFn<T>
     type DirectiveFactoryFn<T extends Controller> = InjectableFn<DirectiveOptions<T>>
     type DoneFunction = NoParameterFn
-    type EventListener = (event?: AngularEvent, ...args: any[]) => void
     type FilterFactoryFn<T> = InjectableFn<T>
     type FormatterFn = SingleTranformFn
     type GetFn<T> = InjectableFn<T>
     type InitializationFn = InjectableFn<void>
     type InjectableFnArray<T> = (string | InjectableFn<T>)[]
-    type MapObject<T> = { [key: string]: T }
     type ModuleToLoad = string | ModuleToLoadFn | ModuleToLoadFnArray
     type ModuleToLoadFn = InjectableFn<void>
     type ModuleToLoadFnArray = InjectableFnArray<void>
-    type NoParameterFn = () => void
     type OffFn = NoParameterFn
     type ParserFn = SingleTranformFn
-    type SingleTranformFn = (value: any) => any
     type StringMapObject = { [key: string]: string }
     type ScopeExpression = ScopeExpressionFn<any> | string
     type ScopeExpressionFn<T> = (scope?: Scope) => T
@@ -147,8 +140,29 @@ declare namespace angular {
         animate<T extends MapObject<string>>(element: Element, from: T, to: T, className: string, options?: AnimateOptions<T>): Promise<void>
     }
 
+    interface AnimateCssOptions<T> extends AnimateOptions<T> {
+        event: Event
+        structural: boolean
+        easing: string
+        transitionStyle: string
+        keyframeStyle: string
+        duration: number
+        delay: number
+        stagger: number
+        staggerIndex: number
+        applyClassesEarly: boolean
+        cleanupStyles: boolean
+    }
+
     interface AnimateCssService extends Service {
-        (element, options): Animator
+        (element: JQuery | Element | Document, options): Animator
+    }
+
+    interface AnimateOptions<T> { 
+        removeClass: string
+        addClass: string
+        from: T
+        to: T
     }
 
     interface AnimateProvider {
@@ -168,7 +182,12 @@ declare namespace angular {
     }
 
     interface Animator {
-        // TODO
+        start(): Promise<void>
+        end(): void
+    }
+
+    interface AsyncValidatorFn {
+        (modelValue: any, viewValue: any): Promise<void>
     }
 
     interface Attributes {
@@ -234,6 +253,10 @@ declare namespace angular {
 
     interface ExceptionHandlerService extends Service {
         //TODO
+    }
+
+    interface EventListener {
+        (event?: AngularEvent, ...args: any[]) : void
     }
 
     interface Filter {
@@ -397,6 +420,10 @@ declare namespace angular {
         //TODO
     }
 
+    interface MapObject<T> {
+        [key: string]: T
+    }
+
     interface Module {
         provider<T extends Service, U extends Provider<T>>(name: string, providerType: U | Constructor<U>): Module
         factory<T extends Service>(name: string, $providerFunction: GetFn<T>): Module
@@ -451,6 +478,10 @@ declare namespace angular {
         $setViewValue(value: any, trigger: string): void
     }
 
+    interface NoParameterFn {
+        (): void
+    }
+
     interface ParseService extends Service {
         //TODO
     }
@@ -479,6 +510,10 @@ declare namespace angular {
 
     interface RootScopeService extends Service {
         //TODO
+    }
+
+    interface SingleTranformFn {
+        (value: any): any
     }
 
     interface SceService extends Service {
