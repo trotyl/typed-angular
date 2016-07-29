@@ -353,10 +353,13 @@ declare namespace angular {
         invoke<T>(fn: internal.InjectableFn<T>, self?: any, locals?: Locals): T
         invoke<T>(fn: internal.InjectableFnInArray<T>, self?: any, locals?: Locals): T
         has(name: string): boolean
+        instantiate<T>(type: internal.InjectableFn<void>, locals?: Locals): T
         instantiate<T>(type: internal.Constructor<T>, locals?: Locals): T
-        annotate(fn: internal.InjectableFn<any>, strictDi?: boolean): string[]
+        instantiate<T>(type: internal.InjectableFnInArray<void>, locals?: Locals): T
+        instantiate<T>(type: internal.ConstructorInArray<T>, locals?: Locals): T
+        annotate(fn: internal.InjectableFn<void>, strictDi?: boolean): string[]
         annotate(fn: internal.Constructor<any>, strictDi?: boolean): string[]
-        annotate(fn: internal.InjectableFnInArray<any>, strictDi?: boolean): string[]
+        annotate(fn: internal.InjectableFnInArray<void>, strictDi?: boolean): string[]
         annotate(fn: internal.ConstructorInArray<any>, strictDi?: boolean): string[]
     }
 
@@ -495,7 +498,10 @@ declare namespace angular {
     }
 
     interface Provide {
-        provider<T extends Service, U extends Provider<T>>(name: string, provider: U | internal.Constructor<U>): U
+        provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: TProvider): TProvider
+        provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: internal.Constructor<TProvider>): TProvider
+        provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: (string | TProvider)[]): TProvider
+        provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: internal.ConstructorInArray<TProvider>): TProvider
         factory<T extends Service>(name: string, $getFn: internal.GetFn<T>): Provider<T>
         service<T extends Service>(name: string, constructor: internal.Constructor<T>): Provider<T>
         value<T extends Service>(name: string, value: T): Provider<T>
