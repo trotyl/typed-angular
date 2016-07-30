@@ -318,7 +318,6 @@ declare namespace angular {
 
     interface Injector {
         get(name: '$injector', caller?: string): Injector
-
         get(name: '$anchorScroll', caller?: string): AnchorScrollService
         get(name: '$animate', caller?: string): AnimateService
         get(name: '$animateCss', caller?: string): AnimateCssService
@@ -453,7 +452,7 @@ declare namespace angular {
         component<T extends Controller>(name: string, options: ComponentOptions<T>): CompileProvider
 
         config(configFn: internal.ConfigFn): Module
-        run(initializationFn: internal.InitializationFn): Module
+        run(initializationFn?: internal.InitializationFn): Module
     }
 
     interface NgModelController {
@@ -499,8 +498,10 @@ declare namespace angular {
 
     interface Provide {
         provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: TProvider): TProvider
+        provider<TService extends Service>(name: string, provider: internal.InjectableFn<any>): Provider<TService>
         provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: internal.Constructor<TProvider>): TProvider
         provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: (string | TProvider)[]): TProvider
+        provider<TService extends Service>(name: string, provider: internal.InjectableFnInArray<any>): Provider<TService>
         provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: internal.ConstructorInArray<TProvider>): TProvider
         factory<T extends Service>(name: string, $getFn: internal.GetFn<T>): Provider<T>
         service<T extends Service>(name: string, constructor: internal.Constructor<T>): Provider<T>
