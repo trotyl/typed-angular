@@ -507,7 +507,10 @@ declare namespace angular {
         provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: internal.ConstructorInArray<TProvider>): TProvider
         factory<T extends Service>(name: string, $getFn: internal.GetFn<T>): Provider<T>
         factory<T extends Service>(name: string, $getFn: internal.GetFnInArray<T>): Provider<T>
+        service<T extends Service>(name: string, constructor: internal.InjectableFn<any>): Provider<T>
         service<T extends Service>(name: string, constructor: internal.Constructor<T>): Provider<T>
+        service<T extends Service>(name: string, constructor: internal.InjectableFnInArray<any>): Provider<T>
+        service<T extends Service>(name: string, constructor: internal.ConstructorInArray<T>): Provider<T>
         value<T extends Service>(name: string, value: T): Provider<T>
         constant<T extends Service>(name: string, value: T): T
         decorator<T extends Service>(name: string, decorator: internal.DecoratorFn<T>)
