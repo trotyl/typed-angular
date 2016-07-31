@@ -44,13 +44,13 @@ describe('auto/$provide', () => {
             // Should have type of Provider<any>
             const provider1 = $provide.provider('customService1', MyProviderFn)
 
-            // Should have type of MyClass
+            // Should have type of MyProviderClass
             const provider2 = $provide.provider('customService2', MyProviderClass)
 
             // Should have type of Provider<any>
             const provider3 = $provide.provider('customService3', ['$controllerProvider', MyProviderFn])
 
-            // Should have type of MyClass
+            // Should have type of MyProviderClass
             const provider4 = $provide.provider('customService4', ['$controllerProvider', MyProviderClass])
         }).run((customService0, customService1, customService2, customService3, customService4) => {
             expect(customService0).toBe(0)
@@ -118,16 +118,49 @@ describe('auto/$provide', () => {
         // NOTICE: Manual testing in VSCode with mouse hover
         module.config(($provide: Provide) => {
 
-            // Should have type of Provider<number>
+            // Should have type of Provider<any>
             const provider0 = $provide.service('customService0', MyServiceFn)
+
+            // Should have type of Provider<MyServiceClass>
             const provider1 = $provide.service('customService1', MyServiceClass)
+
+            // Should have type of Provider<any>
             const provider2 = $provide.service('customService2', ['$controller', MyServiceFn])
+
+            // Should have type of Provider<MyServiceClass>
             const provider3 = $provide.service('customService3', ['$controller', MyServiceClass])
         }).run((customService0, customService1, customService2, customService3) => {
             expect(customService0 instanceof MyServiceFn).toBeTruthy()
             expect(customService1 instanceof MyServiceClass).toBeTruthy()
             expect(customService2 instanceof MyServiceFn).toBeTruthy()
             expect(customService3 instanceof MyServiceClass).toBeTruthy()
+
+            done()
+        })
+
+        angular.bootstrap(document, ['custom'])
+    })
+
+    it('.value should have right parameters', (done) => {
+        module.config(($provide: Provide) => {
+            $provide.value('customService0', 0)
+
+            $provide.value<number>('customService0', 0)
+            
+            done()
+        })
+
+        angular.bootstrap(document, ['custom'])
+    })
+
+    it('.value should have right return type', (done) => {
+        // NOTICE: Manual testing in VSCode with mouse hover
+        module.config(($provide: Provide) => {
+
+            // Should have type of Provider<number>
+            const provider0 = $provide.value('customService0', 0)
+        }).run((customService0) => {
+            expect(customService0).toBe(0)
 
             done()
         })
