@@ -3,6 +3,7 @@ import * as angular from 'angular'
 
 describe('auto/$provide', () => {
     let module: Module
+    let element: Document
 
     function MyProviderFn($controllerProvider) { this.$get = () => 0 }
     class MyProviderClass { $get() { return 0 }; constructor($controllerProvider) { } }
@@ -12,6 +13,7 @@ describe('auto/$provide', () => {
 
     beforeEach(() => {
         module = angular.module('custom', [])
+        element = document.cloneNode(true) as Document
     })
 
     it('.provider should have right parameters', (done) => {
@@ -31,7 +33,7 @@ describe('auto/$provide', () => {
             done()
         })
 
-        angular.bootstrap(document, ['custom'])
+        angular.bootstrap(element, ['custom'])
     })
 
     it('.provider should have right return type', (done) => {
@@ -62,7 +64,7 @@ describe('auto/$provide', () => {
             done()
         })
 
-        angular.bootstrap(document, ['custom'])
+        angular.bootstrap(element, ['custom'])
     })
 
     it('.factory should have right parameters', (done) => {
@@ -76,7 +78,7 @@ describe('auto/$provide', () => {
             done()
         })
 
-        angular.bootstrap(document, ['custom'])
+        angular.bootstrap(element, ['custom'])
     })
 
     it('.factory should have right return type', (done) => {
@@ -93,7 +95,7 @@ describe('auto/$provide', () => {
             done()
         })
 
-        angular.bootstrap(document, ['custom'])
+        angular.bootstrap(element, ['custom'])
     })
 
     it('.service should have right parameters', (done) => {
@@ -111,7 +113,7 @@ describe('auto/$provide', () => {
             done()
         })
 
-        angular.bootstrap(document, ['custom'])
+        angular.bootstrap(element, ['custom'])
     })
 
     it('.service should have right return type', (done) => {
@@ -138,7 +140,7 @@ describe('auto/$provide', () => {
             done()
         })
 
-        angular.bootstrap(document, ['custom'])
+        angular.bootstrap(element, ['custom'])
     })
 
     it('.value should have right parameters', (done) => {
@@ -150,7 +152,7 @@ describe('auto/$provide', () => {
             done()
         })
 
-        angular.bootstrap(document, ['custom'])
+        angular.bootstrap(element, ['custom'])
     })
 
     it('.value should have right return type', (done) => {
@@ -165,6 +167,35 @@ describe('auto/$provide', () => {
             done()
         })
 
-        angular.bootstrap(document, ['custom'])
+        angular.bootstrap(element, ['custom'])
+    })
+
+    it('.constant should have right parameters', (done) => {
+        module.config(($provide: Provide) => {
+            $provide.constant('customService0', 0)
+
+            $provide.constant<number>('customService0', 0)
+            
+            done()
+        })
+
+        angular.bootstrap(element, ['custom'])
+    })
+
+    it('.constant should have right return type', (done) => {
+        // NOTICE: Manual testing in VSCode with mouse hover
+        module.config(($provide: Provide) => {
+
+            // Should have type of number
+            const provider0 = $provide.constant('customService0', 0)
+        }).config((customService0) => {
+            expect(customService0).toBe(0)
+        }).run((customService0) => {
+            expect(customService0).toBe(0)
+
+            done()
+        })
+
+        angular.bootstrap(element, ['custom'])
     })
 })
