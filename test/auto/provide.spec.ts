@@ -198,4 +198,34 @@ describe('auto/$provide', () => {
 
         angular.bootstrap(element, ['custom'])
     })
+
+    it('.decorator should have right parameters', (done) => {
+        module.config(($provide: Provide) => {
+            $provide.value('customService0', 0)
+
+            $provide.decorator('customService0', ($delegate) => 1)
+            $provide.decorator<number>('customService0', ($delegate) => 1)
+            
+            done()
+        })
+
+        angular.bootstrap(element, ['custom'])
+    })
+
+    it('.decorator should have right return type', (done) => {
+        // NOTICE: Manual testing in VSCode with mouse hover
+        module.config(($provide: Provide) => {
+
+            // Should have type of void
+            $provide.value('customService0', 0)
+
+            const nothing = $provide.decorator('customService0', ($delegate) => 1)
+        }).run((customService0) => {
+            expect(customService0).toBe(1)
+
+            done()
+        })
+
+        angular.bootstrap(element, ['custom'])
+    })
 })

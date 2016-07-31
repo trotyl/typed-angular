@@ -18,7 +18,6 @@ declare namespace angular {
         type AnimationFactoryFn<T> = InjectableFn<T>
         type ConfigFn = InjectableFn<void>
         type Control = FormController | NgModelController
-        type DecoratorFn<T> = InjectableFn<T>
         type DirectiveFactoryFn<T extends Controller> = InjectableFn<DirectiveOptions<T>>
         type DoneFunction = NoParameterFn
         type FilterFactoryFn<T> = InjectableFn<T>
@@ -442,7 +441,7 @@ declare namespace angular {
         service<T extends Service>(name: string, constructor: internal.Constructor<T>): Module
         value<T extends Service>(name: string, object: T): Module
         constant<T extends Service>(name: string, object: T): Module
-        decorator<T extends Service>(name: string, decorFn: internal.DecoratorFn<T>): Module
+        decorator<T extends Service>(name: string, decorFn: internal.InjectableFn<T>): Module
 
         animation<T extends Animation>(name: string, animationFactory: internal.AnimationFactoryFn<T>): Module
         controller<T extends Controller>(name: string, constructor: internal.Constructor<T>): Module
@@ -513,7 +512,8 @@ declare namespace angular {
         service<T extends Service>(name: string, constructor: internal.ConstructorInArray<T>): Provider<T>
         value<T extends Service>(name: string, value: T): Provider<T>
         constant<T extends Service>(name: string, value: T): T
-        decorator<T extends Service>(name: string, decorator: internal.DecoratorFn<T>)
+        decorator<T>(name: string, decorator: internal.InjectableFn<T>): void
+        decorator<T>(name: string, decorator: internal.InjectableFnInArray<T>): void
     }
 
     interface Provider<T> {
