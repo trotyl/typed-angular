@@ -14,7 +14,6 @@ declare namespace angular {
         type AnimationFactoryFn<T> = InjectableFn<T>
         type ConfigFn = InjectableFn<void>
         type Control = FormController | NgModelController
-        type DirectiveFactoryFn<T extends Controller> = InjectableFn<DirectiveOptions<T>>
         type DoneFunction = NoParameterFn
         type FilterFactoryFn<T> = InjectableFn<T>
         type FormatterFn = SingleTranformFn
@@ -85,7 +84,7 @@ declare namespace angular {
     function extend<TDist, TSrc0, TSrc1, TSrc2>(dst: TDist, src0: TSrc0, src1: TSrc1, src2: TSrc2): TDist & TSrc0 & TSrc1 & TSrc2
     function extend<TDist, TSrc0, TSrc1, TSrc2, TSrc3>(dst: TDist, src0: TSrc0, src1: TSrc1, src2: TSrc2, src3: TSrc3): TDist & TSrc0 & TSrc1 & TSrc2 & TSrc3
     function extend(dst: any, ...src: any[]): any
-    function forEach<T>(obj: MapObject<T>, iterator: (value?: T, key?: string, obj?: MapObject<T>) => void, context?: any): MapObject<T>
+    function forEach<T>(obj: Hash<T>, iterator: (value?: T, key?: string, obj?: Hash<T>) => void, context?: any): Hash<T>
     function forEach<T>(obj: T[], iterator: (value?: T, key?: number, obj?: T[]) => void, context?: any): T[]
     function fromJson(json: string): Object | any[] | string | number
     function fromJson<T>(json: T): T
@@ -141,13 +140,13 @@ declare namespace angular {
         enabled(enabled?: boolean): boolean
         enabled(element?: Element, enabled?: boolean): boolean
         cancel(animationPromise: Promise<void>): void
-        enter<T extends MapObject<string>>(element: Element, parent: Element, after?: Element, options?: AnimateOptions<T>): Promise<void>
-        move<T extends MapObject<string>>(element: Element, parent: Element, after?: Element, options?: AnimateOptions<T>): Promise<void>
-        leave<T extends MapObject<string>>(element: Element, options?: AnimateOptions<T>): Promise<void>
-        addClass<T extends MapObject<string>>(element: Element, className: string, options?: AnimateOptions<T>): Promise<void>
-        removeClass<T extends MapObject<string>>(element: Element, className: string, options?: AnimateOptions<T>): Promise<void>
-        setClass<T extends MapObject<string>>(element: Element, add: string, remove: string, options?: AnimateOptions<T>): Promise<void>
-        animate<T extends MapObject<string>>(element: Element, from: T, to: T, className: string, options?: AnimateOptions<T>): Promise<void>
+        enter<T extends Hash<string>>(element: Element, parent: Element, after?: Element, options?: AnimateOptions<T>): Promise<void>
+        move<T extends Hash<string>>(element: Element, parent: Element, after?: Element, options?: AnimateOptions<T>): Promise<void>
+        leave<T extends Hash<string>>(element: Element, options?: AnimateOptions<T>): Promise<void>
+        addClass<T extends Hash<string>>(element: Element, className: string, options?: AnimateOptions<T>): Promise<void>
+        removeClass<T extends Hash<string>>(element: Element, className: string, options?: AnimateOptions<T>): Promise<void>
+        setClass<T extends Hash<string>>(element: Element, add: string, remove: string, options?: AnimateOptions<T>): Promise<void>
+        animate<T extends Hash<string>>(element: Element, from: T, to: T, className: string, options?: AnimateOptions<T>): Promise<void>
     }
 
     interface AnimateCssOptions<T> extends AnimateOptions<T> {
@@ -216,29 +215,65 @@ declare namespace angular {
         remove(key: string): void
         removeAll(): void
         destroy(): void
-        info(): { id: string, size: number, [key: string]: any }
+        info(): CacheInfo
     }
 
     interface CacheFactoryService extends Service {
-        //TODO
+        (cacheId: string, options?: { capacity: number }): Cache
+        info(): { [key: string]: CacheInfo }
+        get(cacheId: string): Cache
     }
 
-    interface CompileService extends Service {
-        //TODO
+    interface CacheInfo {
+        id: string
+        size: number
+        [key: string]: any
     }
 
-    interface ComponentOptions<T extends Controller> {
+    interface Changes<T> {
+        currentValue: T
+        previousValue: T
+        isFirstChange(): boolean
+    }
 
+    interface CloneAttachFn {
+        //TODO
+        (clone: any, scope: Scope): any
+    }
+
+    interface CompileLinkFn {
+        (scope: Scope, cloneAttachFn: CloneAttachFn, options: CompileLinkOptions): JQuery
+    }
+
+    interface CompileLinkOptions {
+        //TODO
+	    parentBoundTranscludeFn?: Transclude
+        transcludeControllers?: Hash<Controller>
+        futureParentElement?: any
     }
 
     interface CompileProvider {
-        directive<T extends Controller>(name: string, directiveFactory: internal.DirectiveFactoryFn<T>): CompileProvider
-        directive(mapObject: MapObject<DirectiveOptions<Controller>>): CompileProvider
+        directive<T extends Controller>(name: string, directiveFactory: DirectiveFactoryFn<T>): CompileProvider
+        directive<T extends Controller>(name: string, postLink: LinkFn): CompileProvider
+        directive(mapObject: Hash<DirectiveOptions<Controller>>): CompileProvider
         component<T extends Controller>(name: string, options: ComponentOptions<T>): CompileProvider
+    }
+
+    interface CompileService extends Service {
+        (element, transclude, maxPriority): CompileLinkFn
+    }
+
+    interface ComponentOptions<T extends Controller> {
+        //TODO
     }
 
     interface Controller {
         $inject?: string[]
+        $onInit(): void
+        $onChanges<T>(changesObj: Hash<Changes<T>>)
+        $doCheck(): void
+        $onDestroy(): void
+        $postLink(): void
     }
 
     interface ControllerService extends Service {
@@ -250,8 +285,27 @@ declare namespace angular {
     }
 
     interface DirectiveOptions<T extends Controller> {
-
+        multiElement?: boolean
+        priority?: number
+        terminal?: boolean
+        scope?: boolean | Hash<string>
+        bindToController?: boolean | Hash<string>
+        controller?: T
+        require?: string | string[] | Hash<string>
+        controllerAs?: string
+        restrict?: 'E' | 'A' | 'C' | 'M' | 'EA' | 'EC' | 'EM' | 'AC' | 'AM' | 'CM' | 'EAC' | 'ECM' | 'ACM' | 'EACM'
+        templateNamespace?: 'html' | 'svg' | 'math'
+        //TODO
+        template?: string | ((tElement: any, tAttrs: any) => string)
+        templateUrl?: string | ((tElement: any, tAttrs: any) => string)
+        replace?: boolean
+        transclude?: boolean | 'element' | Hash<string>
+        //TODO
+        compile?: (tElement: any, tAttrs: Attributes, transclude: Transclude) => (LinkFn | { pre?: LinkFn, post?: LinkFn })
+        link?: LinkFn | { pre?: LinkFn, post?: LinkFn }
     }
+
+    interface DirectiveFactoryFn<T extends Controller> extends internal.InjectableFn<DirectiveOptions<T>> { }
 
     interface DocumentService extends Service {
         //TODO
@@ -275,7 +329,7 @@ declare namespace angular {
 
     interface FilterProvider {
         register<T extends Filter>(name: string, factory: internal.FilterFactoryFn<T>): T
-        register(mapObject: MapObject<Filter>): MapObject<Filter>
+        register(mapObject: Hash<Filter>): Hash<Filter>
     }
 
     interface FormController {
@@ -285,7 +339,7 @@ declare namespace angular {
         $invalid: boolean
         $pending: boolean
         $submitted: boolean
-        $error: MapObject<internal.Control>
+        $error: Hash<internal.Control>
 
         $rollbackViewValue(): void
         $commitViewValue(): void
@@ -296,6 +350,10 @@ declare namespace angular {
         $setPristine(): void
         $setUntouched(): void
         $setSubmitted(): void
+    }
+
+    interface Hash<T> {
+        [key: string]: T
     }
 
     interface HttpService extends Service {
@@ -372,6 +430,11 @@ declare namespace angular {
         //TODO
     }
 
+    interface LinkFn {
+        //TODO
+        (scope: Scope, iElement: JQuery, iAttrs: Attributes, controller: Controller | Controller[] | Hash<Controller>, transcludeFn: Transclude): any
+    }
+
     interface LocaleService extends Service {
         //TODO
     }
@@ -418,10 +481,6 @@ declare namespace angular {
         //TODO
     }
 
-    interface MapObject<T> {
-        [key: string]: T
-    }
-
     interface Module {
         provider<T extends Service, U extends Provider<T>>(name: string, providerType: U | internal.Constructor<U>): Module
         factory<T extends Service>(name: string, $providerFunction: internal.GetFn<T>): Module
@@ -433,10 +492,10 @@ declare namespace angular {
         animation<T extends Animation>(name: string, animationFactory: internal.AnimationFactoryFn<T>): Module
         controller<T extends Controller>(name: string, constructor: internal.Constructor<T>): Module
         filter<T extends Filter>(name: string, filterFactory: internal.FilterFactoryFn<T>): Module
-        filter(mapObject: MapObject<Filter>): Module
+        filter(mapObject: Hash<Filter>): Module
 
-        directive<T extends Controller>(name: string, directiveFactory: internal.DirectiveFactoryFn<T>): CompileProvider
-        directive(mapObject: MapObject<DirectiveOptions<Controller>>): CompileProvider
+        directive<T extends Controller>(name: string, directiveFactory: DirectiveFactoryFn<T>): CompileProvider
+        directive(mapObject: Hash<DirectiveOptions<Controller>>): CompileProvider
         component<T extends Controller>(name: string, options: ComponentOptions<T>): CompileProvider
 
         config(configFn: internal.ConfigFn): Module
@@ -448,13 +507,13 @@ declare namespace angular {
         $modelValue: any
         $parsers: internal.ParserFn[]
         $formatters: internal.FormatterFn[]
-        $validators: MapObject<internal.ValidatorFn>
-        $asyncValidators: MapObject<AsyncValidatorFn>
+        $validators: Hash<internal.ValidatorFn>
+        $asyncValidators: Hash<AsyncValidatorFn>
         $viewChangeListeners: internal.ViewChangeListener[]
         // TODO: Check value type
-        $error: MapObject<void>
+        $error: Hash<void>
         // TODO: Check value type
-        $pending: MapObject<void>
+        $pending: Hash<void>
         $untouched: boolean
         $touched: boolean
         $pristine: boolean
@@ -543,13 +602,13 @@ declare namespace angular {
         $watchGroup(watchExpression: string[], listener: internal.WatchListener<any[]>): internal.UnWatchFn
         $watchGroup<T>(watchExpression: internal.ScopeExpressionFn<T>[], listener: internal.WatchListener<T[]>): internal.UnWatchFn
         $watchCollection(obj: string, listener: internal.WatchListener<any>): internal.UnWatchFn
-        $watchCollection<T extends MapObject<any>>(obj: internal.ScopeExpressionFn<T>, listener: internal.WatchListener<T>): internal.UnWatchFn
+        $watchCollection<T extends Hash<any>>(obj: internal.ScopeExpressionFn<T>, listener: internal.WatchListener<T>): internal.UnWatchFn
         $digest(): void
         $destroy(): void
-        $eval(expression?: string, locals?: MapObject<any>): any
-        $eval<T>(expression?: internal.ScopeExpressionFn<T>, locals?: MapObject<any>): T
-        $evalAsync(expression?: string, locals?: MapObject<any>): any
-        $evalAsync<T>(expression?: internal.ScopeExpressionFn<T>, locals?: MapObject<any>): T
+        $eval(expression?: string, locals?: Hash<any>): any
+        $eval<T>(expression?: internal.ScopeExpressionFn<T>, locals?: Hash<any>): T
+        $evalAsync(expression?: string, locals?: Hash<any>): any
+        $evalAsync<T>(expression?: internal.ScopeExpressionFn<T>, locals?: Hash<any>): T
         $apply(exp?: internal.ScopeExpression): void
         $applyAsync(exp?: internal.ScopeExpression): void
         $on(name: string, listener: EventListener): internal.OffFn
@@ -571,6 +630,13 @@ declare namespace angular {
 
     interface TemplateRequestService extends Service {
         //TODO
+    }
+
+    interface Transclude {
+        //TODO check type of cloneLinkingFn
+        (cloneLinkingFn?: any, futureParentElement?: JQuery, slotName?: string): any
+        (scope: Scope, cloneLinkingFn?: any, futureParentElement?: JQuery, slotName?: string): any
+        isSlotFilled(slotName: string): boolean
     }
 
     interface TimeoutService extends Service {
@@ -596,6 +662,6 @@ interface JQuery {
     controller<T extends angular.Controller>(name?: string): T
     injector(): angular.Injector
     inheritedData<T>(name: string): T
-    inheritedData(map: angular.MapObject<any>): JQuery
+    inheritedData(map: angular.Hash<any>): JQuery
     inheritedData(name: string, value: any): JQuery
 }
