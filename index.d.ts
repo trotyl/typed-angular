@@ -3,10 +3,6 @@
 // Definitions by: Trotyl Yu <http://github.com/trotyl>
 // Definitions: https://github.com/trotyl/typed-angular
 
-interface Function {
-    $inject?: string[]
-}
-
 declare module 'angular' {
     export = angular
 }
@@ -58,6 +54,7 @@ declare namespace angular {
         counter: number,
         [key: number]: Function
     }
+    
     const version: {
         full: string,
         major: number,
@@ -241,7 +238,7 @@ declare namespace angular {
     }
 
     interface Controller {
-
+        $inject?: string[]
     }
 
     interface ControllerService extends Service {
@@ -369,16 +366,6 @@ declare namespace angular {
 
     interface IntervalService extends Service {
         //TODO
-    }
-
-    interface JQuery {
-        scope<T extends Scope>(): T
-        isolateScope<T extends Scope>(): T
-        controller<T extends Controller>(name?: string): T
-        injector(): Injector
-        inheritedData<T>(name: string): T
-        inheritedData(map: MapObject<any>): JQuery
-        inheritedData(name: string, value: any): JQuery
     }
 
     interface JsonpCallbacksService extends Service {
@@ -575,7 +562,7 @@ declare namespace angular {
     }
 
     interface Service {
-
+        $inject?: string[]
     }
 
     interface TemplateCacheService extends Service {
@@ -597,4 +584,18 @@ declare namespace angular {
     interface XhrFactoryService extends Service {
         //TODO
     }
+}
+
+interface Function {
+    $inject?: string[]
+}
+
+interface JQuery {
+    scope<T extends angular.Scope>(): T
+    isolateScope<T extends angular.Scope>(): T
+    controller<T extends angular.Controller>(name?: string): T
+    injector(): angular.Injector
+    inheritedData<T>(name: string): T
+    inheritedData(map: angular.MapObject<any>): JQuery
+    inheritedData(name: string, value: any): JQuery
 }
