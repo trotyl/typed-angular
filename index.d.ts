@@ -9,46 +9,6 @@ declare module 'angular' {
 
 declare namespace angular {
 
-    namespace internal {
-        type AnimateEvent = 'enter' | 'leave' | 'move' | 'addClass' | 'removeClass'
-        type AnimationFactoryFn<T> = InjectableFn<T>
-        type ConfigFn = InjectableFn<void>
-        type Control = FormController | NgModelController
-        type DoneFunction = NoParameterFn
-        type FilterFactoryFn<T> = InjectableFn<T>
-        type FormatterFn = SingleTranformFn
-        type GetFn<T> = InjectableFn<T>
-        type InitializationFn = InjectableFn<void>
-        type InjectableFnInArray<T> = (string | InjectableFn<T>)[]
-        type ModuleToLoad = string | ModuleToLoadFn | ModuleToLoadFnArray
-        type ModuleToLoadFn = InjectableFn<void>
-        type ModuleToLoadFnArray = InjectableFnInArray<void>
-        type OffFn = NoParameterFn
-        type ParserFn = SingleTranformFn
-        type StringMapObject = { [key: string]: string }
-        type ScopeExpression = ScopeExpressionFn<any> | string
-        type ScopeExpressionFn<T> = (scope?: Scope) => T
-        type SelectableElement = string | Element | Document | JQuery
-        type Type = InjectableFn<void> | InjectableFnInArray<void>
-        type UnObserveFn = NoParameterFn
-        type UnWatchFn = NoParameterFn
-        type ValidatorFn = (modelValue: any, viewValue: any) => boolean
-        type ViewChangeListener = NoParameterFn
-        type WatchListener<T> = (newVal?: T, oldVal?: T, scope?: Scope) => void
-
-        interface Constructor<T> {
-            new (...args: any[]): T
-        }
-
-        type ConstructorInArray<T> = (string | Constructor<T>)[]
-
-        type GetFnInArray<T> = (string | GetFn<T>)[]
-
-        interface InjectableFn<T> extends Function {
-            (...args: any[]): T
-        }
-    }
-
     const callbacks: {
         counter: number,
         [key: number]: Function
@@ -74,10 +34,10 @@ declare namespace angular {
     function bind<TResult, TParam0, TParam1, TParam2, TParam3>(self: any, fn: (param0: TParam0, param1: TParam1, param2: TParam2, param3: TParam3) => TResult, arg0: TParam0, arg1: TParam1, arg2: TParam2): (param3: TParam3) => TResult
     function bind<TResult, TParam0, TParam1, TParam2, TParam3>(self: any, fn: (param0: TParam0, param1: TParam1, param2: TParam2, param3: TParam3) => TResult, arg0: TParam0, arg1: TParam1, arg2: TParam2, arg3: TParam3): () => TResult
     function bind(self: any, fn: Function, ...args: any[]): Function
-    function bootstrap(element: internal.SelectableElement, modules?: internal.ModuleToLoad[], config?: { strictDi?: boolean }): Injector
+    function bootstrap(element: SelectableElement, modules?: ModuleToLoad[], config?: { strictDi?: boolean }): Injector
     function copy<T>(source: T): T
     function copy<T>(source: T, destination: T): void
-    function element(element: internal.SelectableElement): JQuery
+    function element(element: SelectableElement): JQuery
     function equals<T>(o1: T, o2: T): boolean
     function extend<TDist, TSrc>(dst: TDist, src: TSrc): TDist & TSrc
     function extend<TDist, TSrc0, TSrc1>(dst: TDist, src0: TSrc0, src1: TSrc1): TDist & TSrc0 & TSrc1
@@ -132,8 +92,10 @@ declare namespace angular {
         defaultPrevented: boolean
     }
 
+    type AnimateEvent = 'enter' | 'leave' | 'move' | 'addClass' | 'removeClass'
+
     interface AnimateService extends Service {
-        on(event: internal.AnimateEvent, container: Element, callback: (element: Element, phase: 'start' | 'close') => void): void
+        on(event: AnimateEvent, container: Element, callback: (element: Element, phase: 'start' | 'close') => void): void
         off(container: Element, callback?: any): void
         off(event: string, container?: Element, callback?: () => void): void
         pin(element: string, parentElement: string): void
@@ -175,19 +137,19 @@ declare namespace angular {
     }
 
     interface AnimateProvider {
-        register<T extends Animation>(name: string, factory: internal.AnimationFactoryFn<T>): void
+        register<T extends Animation>(name: string, factory: ReturnableFn<T>): void
         classNameFilter(expression?: RegExp): RegExp
     }
 
     interface Animation {
         // TODO: check element type
-        setClass?(element, addedClasses, removedClasses, doneFunction: internal.DoneFunction, options): void
-        addClass?(element, addedClasses, doneFunction: internal.DoneFunction, options): void
-        removeClass?(element, removedClasses, doneFunction: internal.DoneFunction, options): void
-        enter?(element, doneFunction: internal.DoneFunction, options): void
-        leave?(element, doneFunction: internal.DoneFunction, options): void
-        move?(element, doneFunction: internal.DoneFunction, options): void
-        animate?(element, fromStyles, toStyles, doneFunction: internal.DoneFunction, options): void
+        setClass?(element, addedClasses, removedClasses, doneFunction: () => void, options): void
+        addClass?(element, addedClasses, doneFunction: () => void, options): void
+        removeClass?(element, removedClasses, doneFunction: () => void, options): void
+        enter?(element, doneFunction: () => void, options): void
+        leave?(element, doneFunction: () => void, options): void
+        move?(element, doneFunction: () => void, options): void
+        animate?(element, fromStyles, toStyles, doneFunction: () => void, options): void
     }
 
     interface Animator {
@@ -200,14 +162,17 @@ declare namespace angular {
     }
 
     interface Attributes {
-        $attr: internal.StringMapObject
+        $attr: Hash<string>
         $normalize(name: string): string
         $addClass(classVal: string): void
         $removeClass(classVal: string): void
         $updateClass(newClasses: string, oldClasses: string): void
-        $observe(key: string, fn: (interpolatedValue: string) => void): internal.UnObserveFn
+        //TODO
+        $observe(key: string, fn: (interpolatedValue: string) => void): () => any
         $set(name: string, value: string): void
     }
+
+    type Boxed<T> = (string | T)[]
 
     interface Cache {
         put<T>(key: string, value: T): T
@@ -267,6 +232,12 @@ declare namespace angular {
         //TODO
     }
 
+    interface Constructor<T> {
+        new (...args: any[]): T
+    }
+
+    type Control = NgForm | NgModel<any>
+
     interface Controller {
         $inject?: string[]
         $onInit(): void
@@ -281,7 +252,7 @@ declare namespace angular {
     }
 
     interface ControllerProvider {
-        register<T extends Controller>(name: string, constructor: internal.Constructor<T>): void
+        register<T extends Controller>(name: string, constructor: Constructor<T>): void
     }
 
     interface DirectiveOptions<T extends Controller> {
@@ -305,7 +276,7 @@ declare namespace angular {
         link?: LinkFn | { pre?: LinkFn, post?: LinkFn }
     }
 
-    interface DirectiveFactoryFn<T extends Controller> extends internal.InjectableFn<DirectiveOptions<T>> { }
+    interface DirectiveFactoryFn<T extends Controller> extends ReturnableFn<DirectiveOptions<T>> { }
 
     interface DocumentService extends Service {
         //TODO
@@ -328,28 +299,8 @@ declare namespace angular {
     }
 
     interface FilterProvider {
-        register<T extends Filter>(name: string, factory: internal.FilterFactoryFn<T>): T
+        register<T extends Filter>(name: string, factory: ReturnableFn<T>): T
         register(mapObject: Hash<Filter>): Hash<Filter>
-    }
-
-    interface FormController {
-        $pristine: boolean
-        $dirty: boolean
-        $valid: boolean
-        $invalid: boolean
-        $pending: boolean
-        $submitted: boolean
-        $error: Hash<internal.Control>
-
-        $rollbackViewValue(): void
-        $commitViewValue(): void
-        $addControl(control: internal.Control): void
-        $removeControl(control: internal.Control): void
-        $setValidity(): void
-        $setDirty(): void
-        $setPristine(): void
-        $setUntouched(): void
-        $setSubmitted(): void
     }
 
     interface Hash<T> {
@@ -405,17 +356,17 @@ declare namespace angular {
         get(name: '$window', caller?: string): WindowService
         get(name: '$xhrFactory', caller?: string): XhrFactoryService
         get<T extends Service>(name: string, caller?: string): T
-        invoke<T>(fn: internal.InjectableFn<T>, self?: any, locals?: Locals): T
-        invoke<T>(fn: internal.InjectableFnInArray<T>, self?: any, locals?: Locals): T
+        invoke<T>(fn: ReturnableFn<T>, self?: any, locals?: Locals): T
+        invoke<T>(fn: Boxed<ReturnableFn<T>>, self?: any, locals?: Locals): T
         has(name: string): boolean
-        instantiate<T>(type: internal.InjectableFn<void>, locals?: Locals): T
-        instantiate<T>(type: internal.Constructor<T>, locals?: Locals): T
-        instantiate<T>(type: internal.InjectableFnInArray<void>, locals?: Locals): T
-        instantiate<T>(type: internal.ConstructorInArray<T>, locals?: Locals): T
-        annotate(fn: internal.InjectableFn<void>, strictDi?: boolean): string[]
-        annotate(fn: internal.Constructor<any>, strictDi?: boolean): string[]
-        annotate(fn: internal.InjectableFnInArray<void>, strictDi?: boolean): string[]
-        annotate(fn: internal.ConstructorInArray<any>, strictDi?: boolean): string[]
+        instantiate<T>(type: Function, locals?: Locals): T
+        instantiate<T>(type: Constructor<T>, locals?: Locals): T
+        instantiate<T>(type: Boxed<Function>, locals?: Locals): T
+        instantiate<T>(type: Boxed<Constructor<T>>, locals?: Locals): T
+        annotate(fn: Function, strictDi?: boolean): string[]
+        annotate(fn: Constructor<any>, strictDi?: boolean): string[]
+        annotate(fn: Boxed<Function>, strictDi?: boolean): string[]
+        annotate(fn: Boxed<Constructor<any>>, strictDi?: boolean): string[]
     }
 
     interface InterpolateService extends Service {
@@ -482,34 +433,56 @@ declare namespace angular {
     }
 
     interface Module {
-        provider<T extends Service, U extends Provider<T>>(name: string, providerType: U | internal.Constructor<U>): Module
-        factory<T extends Service>(name: string, $providerFunction: internal.GetFn<T>): Module
-        service<T extends Service>(name: string, constructor: internal.Constructor<T>): Module
+        provider<T extends Service, U extends Provider<T>>(name: string, providerType: U | Constructor<U>): Module
+        factory<T extends Service>(name: string, $providerFunction: ReturnableFn<T>): Module
+        service<T extends Service>(name: string, constructor: Constructor<T>): Module
         value<T extends Service>(name: string, object: T): Module
         constant<T extends Service>(name: string, object: T): Module
-        decorator<T extends Service>(name: string, decorFn: internal.InjectableFn<T>): Module
+        decorator<T extends Service>(name: string, decorFn: ReturnableFn<T>): Module
 
-        animation<T extends Animation>(name: string, animationFactory: internal.AnimationFactoryFn<T>): Module
-        controller<T extends Controller>(name: string, constructor: internal.Constructor<T>): Module
-        filter<T extends Filter>(name: string, filterFactory: internal.FilterFactoryFn<T>): Module
+        animation<T extends Animation>(name: string, animationFactory: ReturnableFn<T>): Module
+        controller<T extends Controller>(name: string, constructor: Constructor<T>): Module
+        filter<T extends Filter>(name: string, filterFactory: ReturnableFn<T>): Module
         filter(mapObject: Hash<Filter>): Module
 
         directive<T extends Controller>(name: string, directiveFactory: DirectiveFactoryFn<T>): CompileProvider
         directive(mapObject: Hash<DirectiveOptions<Controller>>): CompileProvider
         component<T extends Controller>(name: string, options: ComponentOptions<T>): CompileProvider
 
-        config(configFn: internal.ConfigFn): Module
-        run(initializationFn?: internal.InitializationFn): Module
+        config(configFn: Function): Module
+        run(initializationFn?: Function): Module
     }
 
-    interface NgModelController {
-        $viewValue: any
-        $modelValue: any
-        $parsers: internal.ParserFn[]
-        $formatters: internal.FormatterFn[]
-        $validators: Hash<internal.ValidatorFn>
+    type ModuleToLoad = string | Function | Boxed<Function>
+
+    interface NgForm {
+        $pristine: boolean
+        $dirty: boolean
+        $valid: boolean
+        $invalid: boolean
+        $pending: boolean
+        $submitted: boolean
+        $error: Hash<Control>
+
+        $rollbackViewValue(): void
+        $commitViewValue(): void
+        $addControl(control: Control): void
+        $removeControl(control: Control): void
+        $setValidity(): void
+        $setDirty(): void
+        $setPristine(): void
+        $setUntouched(): void
+        $setSubmitted(): void
+    }
+
+    interface NgModel<T> {
+        $viewValue: string
+        $modelValue: T
+        $parsers: ((value: any) => any)[]
+        $formatters: ((value: any) => any)[]
+        $validators: Hash<(modelValue: T, viewValue: string) => boolean>
         $asyncValidators: Hash<AsyncValidatorFn>
-        $viewChangeListeners: internal.ViewChangeListener[]
+        $viewChangeListeners: (() => void)[]
         // TODO: Check value type
         $error: Hash<void>
         // TODO: Check value type
@@ -535,40 +508,40 @@ declare namespace angular {
         $setViewValue(value: any, trigger: string): void
     }
 
-    interface NoParameterFn {
-        (): void
-    }
-
     interface ParseService extends Service {
         //TODO
     }
 
     interface Provide {
         provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: TProvider): TProvider
-        provider<TService extends Service>(name: string, provider: internal.InjectableFn<any>): Provider<TService>
-        provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: internal.Constructor<TProvider>): TProvider
+        provider<TService extends Service>(name: string, provider: Function): Provider<TService>
+        provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: Constructor<TProvider>): TProvider
         provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: (string | TProvider)[]): TProvider
-        provider<TService extends Service>(name: string, provider: internal.InjectableFnInArray<any>): Provider<TService>
-        provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: internal.ConstructorInArray<TProvider>): TProvider
-        factory<T extends Service>(name: string, $getFn: internal.GetFn<T>): Provider<T>
-        factory<T extends Service>(name: string, $getFn: internal.GetFnInArray<T>): Provider<T>
-        service<T extends Service>(name: string, constructor: internal.InjectableFn<any>): Provider<T>
-        service<T extends Service>(name: string, constructor: internal.Constructor<T>): Provider<T>
-        service<T extends Service>(name: string, constructor: internal.InjectableFnInArray<any>): Provider<T>
-        service<T extends Service>(name: string, constructor: internal.ConstructorInArray<T>): Provider<T>
+        provider<TService extends Service>(name: string, provider: Boxed<Function>): Provider<TService>
+        provider<TService extends Service, TProvider extends Provider<TService>>(name: string, provider: Boxed<Constructor<TProvider>>): TProvider
+        factory<T extends Service>(name: string, $getFn: ReturnableFn<T>): Provider<T>
+        factory<T extends Service>(name: string, $getFn: Boxed<ReturnableFn<T>>): Provider<T>
+        service<T extends Service>(name: string, constructor: Function): Provider<T>
+        service<T extends Service>(name: string, constructor: Constructor<T>): Provider<T>
+        service<T extends Service>(name: string, constructor: Boxed<Function>): Provider<T>
+        service<T extends Service>(name: string, constructor: Boxed<Constructor<T>>): Provider<T>
         value<T extends Service>(name: string, value: T): Provider<T>
         constant<T extends Service>(name: string, value: T): T
-        decorator<T>(name: string, decorator: internal.InjectableFn<T>): void
-        decorator<T>(name: string, decorator: internal.InjectableFnInArray<T>): void
+        decorator<T>(name: string, decorator: ReturnableFn<T>): void
+        decorator<T>(name: string, decorator: Boxed<ReturnableFn<T>>): void
     }
 
     interface Provider<T> {
-        $get: internal.GetFn<T>
+        $get: ReturnableFn<T>
         [key: string]: any
     }
 
     interface QService extends Service {
         //TODO
+    }
+
+    interface ReturnableFn<T> extends Function {
+        (...args: any[]): T
     }
 
     interface RootElementService extends Service {
@@ -577,10 +550,6 @@ declare namespace angular {
 
     interface RootScopeService extends Service {
         //TODO
-    }
-
-    interface SingleTranformFn {
-        (value: any): any
     }
 
     interface SceService extends Service {
@@ -597,24 +566,30 @@ declare namespace angular {
         $root: Scope
 
         $new(isolate: boolean, parent?: Scope): Scope
-        $watch(watchExpression: string, listener: internal.WatchListener<any>, objectEquality?: boolean): internal.UnWatchFn
-        $watch<T>(watchExpression: internal.ScopeExpressionFn<T>, listener: internal.WatchListener<T>, objectEquality?: boolean): internal.UnWatchFn
-        $watchGroup(watchExpression: string[], listener: internal.WatchListener<any[]>): internal.UnWatchFn
-        $watchGroup<T>(watchExpression: internal.ScopeExpressionFn<T>[], listener: internal.WatchListener<T[]>): internal.UnWatchFn
-        $watchCollection(obj: string, listener: internal.WatchListener<any>): internal.UnWatchFn
-        $watchCollection<T extends Hash<any>>(obj: internal.ScopeExpressionFn<T>, listener: internal.WatchListener<T>): internal.UnWatchFn
+        $watch(watchExpression: string, listener: ScopeWatchListener<any>, objectEquality?: boolean): () => any
+        $watch<T>(watchExpression: (scope?: Scope) => T, listener: ScopeWatchListener<T>, objectEquality?: boolean): () => any
+        $watchGroup(watchExpression: string[], listener: ScopeWatchListener<any[]>): () => any
+        $watchGroup<T>(watchExpression: (scope?: Scope) => T[], listener: ScopeWatchListener<T[]>): () => any
+        $watchCollection(obj: string, listener: ScopeWatchListener<any>): () => any
+        $watchCollection<T extends Hash<any>>(obj: (scope?: Scope) => T, listener: ScopeWatchListener<T>): () => any
         $digest(): void
         $destroy(): void
         $eval(expression?: string, locals?: Hash<any>): any
-        $eval<T>(expression?: internal.ScopeExpressionFn<T>, locals?: Hash<any>): T
+        $eval<T>(expression?: (scope?: Scope) => T, locals?: Hash<any>): T
         $evalAsync(expression?: string, locals?: Hash<any>): any
-        $evalAsync<T>(expression?: internal.ScopeExpressionFn<T>, locals?: Hash<any>): T
-        $apply(exp?: internal.ScopeExpression): void
-        $applyAsync(exp?: internal.ScopeExpression): void
-        $on(name: string, listener: EventListener): internal.OffFn
+        $evalAsync<T>(expression?: (scope?: Scope) => T, locals?: Hash<any>): T
+        $apply(exp?: string): void
+        $apply(exp?: (scope?: Scope) => void): void
+        $applyAsync(exp?: string): void
+        $applyAsync(exp?: (scope?: Scope) => void): void
+        $on(name: string, listener: EventListener): () => any
         $emit(name: string, ...args: any[]): AngularEvent
         $broadcast(name: string, ...args: any[]): AngularEvent
     }
+
+    type ScopeWatchListener<T> = (newVal?: T, oldVal?: T, scope?: Scope) => void
+
+    type SelectableElement = string | Element | Document | JQuery
 
     interface SelectController {
 
